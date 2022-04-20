@@ -1,5 +1,6 @@
 package com.letscode.microservicoharrypotter.dto;
 
+import com.letscode.microservicoharrypotter.models.Series;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AlunoRequest {
     private String name;
-    private String serie;
+    private Series serie;
 }

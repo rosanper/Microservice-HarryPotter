@@ -22,7 +22,8 @@ public class Aluno {
     private String nome;
 
     @Column(name = "serie")
-    private String serie;
+    @Enumerated(value = EnumType.STRING)
+    private Series serie;
 
     @Column(name = "chave")
     private String chaveDaCasaSeletora;

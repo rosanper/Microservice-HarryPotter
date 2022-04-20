@@ -22,7 +22,7 @@ public class AlunoResponse {
     public AlunoResponse(Aluno aluno, Casa casa) {
         this.id = aluno.getId();
         this.nome = aluno.getNome();
-        this.serie = aluno.getSerie();
+        this.serie = aluno.getSerie().getNome();
         this.chaveDaCasaSeletora = aluno.getChaveDaCasaSeletora();
         this.casa = casa;
     }
