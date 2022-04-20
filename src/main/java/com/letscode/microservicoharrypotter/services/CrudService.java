@@ -4,6 +4,7 @@ import com.letscode.microservicoharrypotter.dto.AlunoRequest;
 import com.letscode.microservicoharrypotter.dto.AlunoResponse;
 import com.letscode.microservicoharrypotter.dto.clients.Casa;
 import com.letscode.microservicoharrypotter.dto.clients.Chave;
+import com.letscode.microservicoharrypotter.exceptions.NotFoundError;
 import com.letscode.microservicoharrypotter.models.Aluno;
 import com.letscode.microservicoharrypotter.repositories.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class CrudService {
     }
 
     public AlunoResponse getAlunoByChave(String chave){
-        Aluno aluno = alunoRepository.findByChaveDaCasaSeletora(chave).orElseThrow();
+        Aluno aluno = alunoRepository.findByChaveDaCasaSeletora(chave)
+                .orElseThrow(() -> new NotFoundError("Não foi encontrado aluno com essa chave"));
         Casa casa = clientService.getCasa(aluno.getChaveDaCasaSeletora());
         return new AlunoResponse(aluno,casa);
     }

@@ -7,25 +7,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+
 @Service
 public class ClientService {
+
+    static final String URL_OBTER_CHAVE = "https://api-harrypotter.herokuapp.com/sortinghat";
+    static final String URL_OBTER_CASA = "https://api-harrypotter.herokuapp.com/house/{chavecasa}";
 
     public Chave getChave(){
         try{
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Chave> chave =
-                    restTemplate.getForEntity("https://api-harrypotter.herokuapp.com/sortinghat", Chave.class);
-
-            if (chave.getStatusCode().isError()){
-                // TODO tratar exception
-                return null;
-            }
+                    restTemplate.getForEntity(URL_OBTER_CHAVE, Chave.class);
             return chave.getBody();
         }catch (RestClientException e){
-            // TODO tratar exception
+            // Falta Ajustar a mensagem do erro
+            throw new RestClientException(e.getMessage());
         }
 
-        return null;
     }
 
     public Casa getCasa(String chave){
@@ -35,20 +35,16 @@ public class ClientService {
             httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
             HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
             ResponseEntity<Casa> casa =
-                    restTemplate.exchange("https://api-harrypotter.herokuapp.com/house/{chavecasa}",
+                    restTemplate.exchange(URL_OBTER_CASA,
                     HttpMethod.GET,
                     httpEntity,
                     Casa.class,
                     chave);
-            if (casa.getStatusCode().isError()){
-                // TODO tratar exception
-                return null;
-            }
             return casa.getBody();
         }catch (RestClientException e){
-            // TODO tratar exception
+            // Falta Ajustar a mensagem do erro
+            throw new RestClientException(e.getMessage());
         }
-        return null;
     }
 
 }
