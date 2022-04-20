@@ -29,31 +29,35 @@ public class AlunoController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public AlunoResponse create(@RequestBody AlunoRequest alunoRequest){
         Aluno aluno = crudService.create(alunoRequest);
-        return new AlunoResponse(aluno.getId(), aluno.getNome(), aluno.getSerie());
+        Casa casa = clientService.getCasa(aluno.getChaveDaCasaSeletora());
+        return new AlunoResponse(aluno,casa);
     }
 
     @GetMapping
-    public List<AlunoResponse> getAluno(@RequestParam(required = false) String nome){
-        if (nome == null){
+    public List<AlunoResponse> getAluno(@RequestParam(required = false) String chave){
+        if (chave == null){
             return crudService.getAll().stream()
-                    .map(aluno -> new AlunoResponse(aluno.getId(), aluno.getNome(), aluno.getSerie()))
+                    .map(aluno -> new AlunoResponse(aluno, clientService.getCasa(aluno.getChaveDaCasaSeletora())))
                     .collect(Collectors.toList());
         }
+
         List<AlunoResponse> response = new ArrayList<>();
-        Aluno aluno = crudService.getAluno(nome);
-        response.add(new AlunoResponse(aluno.getId(), aluno.getNome(), aluno.getSerie()));
+        AlunoResponse aluno = crudService.getAlunoByChave(chave);
+        response.add(aluno);
         return response;
     }
 
-    @GetMapping("/chave")
-    public String teste(@RequestParam(required = false) String chave){
-        if (chave != null){
-            Casa casa = clientService.getCasa(chave);
-            String name = casa.getName();
-            return name;
-        }
-        Chave key = clientService.getChave();
-        String chaveCasa = key.getSortingHatChoice();
-        return chaveCasa;
-    }
+
+    // Teste para ver se estava funcionando a obtenção da chave e da casa
+//    @GetMapping("/chave")
+//    public String teste(@RequestParam(required = false) String chave){
+//        if (chave != null){
+//            Casa casa = clientService.getCasa(chave);
+//            String name = casa.getName();
+//            return name;
+//        }
+//        Chave key = clientService.getChave();
+//        String chaveCasa = key.getSortingHatChoice();
+//        return chaveCasa;
+//    }
 }

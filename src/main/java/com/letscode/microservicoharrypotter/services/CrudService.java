@@ -1,6 +1,9 @@
 package com.letscode.microservicoharrypotter.services;
 
 import com.letscode.microservicoharrypotter.dto.AlunoRequest;
+import com.letscode.microservicoharrypotter.dto.AlunoResponse;
+import com.letscode.microservicoharrypotter.dto.clients.Casa;
+import com.letscode.microservicoharrypotter.dto.clients.Chave;
 import com.letscode.microservicoharrypotter.models.Aluno;
 import com.letscode.microservicoharrypotter.repositories.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +24,26 @@ public class CrudService {
         Aluno aluno = new Aluno();
         aluno.setSerie(alunoRequest.getSerie());
         aluno.setNome(alunoRequest.getName());
-        alunoRepository.save(aluno);
-        return aluno;
-    }
 
-    public Aluno getAluno(String nome) {
-        Aluno aluno = alunoRepository.findByNome(nome).orElseThrow();
+        Chave chave = clientService.getChave();
+        aluno.setChaveDaCasaSeletora(chave.getSortingHatChoice());
+
+        alunoRepository.save(aluno);
         return aluno;
     }
 
     public List<Aluno> getAll(){
         return alunoRepository.findAll();
+    }
+
+    public AlunoResponse getAlunoByChave(String chave){
+        Aluno aluno = alunoRepository.findByChaveDaCasaSeletora(chave).orElseThrow();
+        Casa casa = clientService.getCasa(aluno.getChaveDaCasaSeletora());
+        return new AlunoResponse(aluno,casa);
+    }
+
+    public Aluno getAlunoByNome(String nome) {
+        Aluno aluno = alunoRepository.findByNome(nome).orElseThrow();
+        return aluno;
     }
 }

@@ -24,4 +24,7 @@ public class Aluno {
     @Column(name = "serie")
     private String serie;
 
+    @Column(name = "chave")
+    private String chaveDaCasaSeletora;
+
 }
